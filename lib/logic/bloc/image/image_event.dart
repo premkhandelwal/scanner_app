@@ -17,3 +17,5 @@ class AddInitializeEvent extends ImageEvent {
     required this.cameraController,
   });
 }
+
+class AddInitializeInProgress extends ImageEvent{}

@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:scanner_app/logic/bloc/camera1/cubit/camera_cubit.dart';
+import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
 import 'package:scanner_app/logic/providers/image_provider.dart';
 
 part 'image_event.dart';
@@ -21,24 +21,24 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     on<ImageEvent>((event, emit) {
       if (event is AddInitializeEvent) {
         emit(InitializedCamera(controller: event.cameraController));
-      }
-      if (event is CaptureImageRequested) {
-        Stream x = cameraCubit.initCameraStream();
-        cameraScubscription = x.listen((state) {
-          if (state is InitializeCameraSuccess) {
-            if (emit.isDone) {
-              add(AddInitializeEvent(cameraController: state.controller));
-            } else {
-              emit(InitializedCamera(controller: state.controller));
-            }
-            // emit(ImageCaptureSuccess());
-          } else if (state is InitializeInProgress) {
-            emit(InitializeInProgress());
-          }
-        });
+      } else if (event is AddInitializeInProgress) {
+        emit(InitializeInProgress());
+      } else if (event is CaptureImageRequested) {
+        mapCaptureImagetoState(emit);
       }
     });
   }
+
+  void mapCaptureImagetoState(Emitter<ImageState> emit) async {
+    cameraScubscription = cameraCubit.initCamera().listen((cameraState) {
+      if (cameraState is InitializeCameraSuccess) {
+        add(AddInitializeEvent(cameraController: cameraState.controller));
+      } else if (cameraState is InitializeCameraInProgress) {
+        add(AddInitializeInProgress());
+      }
+    });
+  }
+
   @override
   Future<void> close() {
     cameraScubscription!.cancel();
