@@ -13,16 +13,6 @@ class CropImageRequested extends ImageEvent {}
 
 class ImageSaveRequested extends ImageEvent {}
 
-class AddInitializeEvent extends ImageEvent {
-  final CameraController cameraController;
-  AddInitializeEvent({
-    required this.cameraController,
-  });
-}
+class AddInitializeEvent extends ImageEvent {}
 
-class AddInitializeInProgress extends ImageEvent {
-  final double val;
-  AddInitializeInProgress({
-    required this.val,
-  });
-}
+class AddInitializeInProgress extends ImageEvent {}

@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scanner_app/constants/globals.dart';
 import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 import 'package:scanner_app/screens/display_picture_screen.dart';
 
@@ -12,8 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late CameraDescription _camera;
-  CameraController? _cameraController;
   late ImageBloc imageBloc;
   @override
   void initState() {
@@ -21,12 +20,6 @@ class _HomePageState extends State<HomePage> {
     imageBloc = BlocProvider.of<ImageBloc>(context);
     imageBloc.add(CaptureImageRequested());
     super.initState();
-  }
-
-  void getCameras() async {
-    final cameras = await availableCameras();
-    _camera = cameras.first;
-    _cameraController = CameraController(_camera, ResolutionPreset.high);
   }
 
   double progress = 0.0;
@@ -39,32 +32,35 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: BlocBuilder<ImageBloc, ImageState>(
-       
+
         builder: (ctx, state) {
           if (state is InitializedCamera) {
-            _cameraController = state.controller;
-            return CameraPreview(state.controller);
-          } else if (state is InitializeInProgress) {
-            return Center(
-              child: CircularProgressIndicator(
-                value: state.value,
-
-              ),
+            return CameraPreview(Globals.cameraController!);
+          } else if (state is InitializeInProgress || state is ImageInitial) {
+            return StreamBuilder<double>(
+              stream: Globals.imageLoadValue.stream,
+              builder: (context, snapshot) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: snapshot.data,
+                  ),
+                );
+              }
             );
           }
-          return const Center(child: CircularProgressIndicator());
+          return  Container(color: Colors.blue,);
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final image = await _cameraController!.takePicture();
+          /* final image = await _cameraController!.takePicture();
           await Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (ctx) => DisplayPictureScreen(
                       imagePath: image.path,
                     )),
-          );
+          ); */
         },
         child: const Icon(Icons.camera_alt),
       ),
@@ -73,8 +69,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _cameraController!.dispose();
+    Globals.cameraController!.dispose();
     super.dispose();
   }
 }

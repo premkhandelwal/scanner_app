@@ -6,19 +6,8 @@ abstract class CameraState {}
 class CameraInitial extends CameraState {
 }
 
-class InitializeCameraInProgress extends CameraState {
-  final double val;
-  InitializeCameraInProgress({
-    required this.val,
-  });
-}
+class InitializeCameraInProgress extends CameraState {}
 
-class InitializeCameraSuccess extends CameraState {
-  final CameraController controller;
-  InitializeCameraSuccess({
-    required this.controller,
-  });
-
-}
+class InitializeCameraSuccess extends CameraState {}
 
 class InitializeCameraFailure extends CameraState {}

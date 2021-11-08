@@ -3,24 +3,32 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:meta/meta.dart';
-
+import 'package:scanner_app/constants/globals.dart';
 
 part 'camera_state.dart';
 
 class CameraCubit extends Cubit<CameraState> {
   CameraCubit() : super(CameraInitial());
-  
+
+  CameraDescription? _camera;
   Stream<CameraState> initCamera() async* {
-    CameraDescription? _camera;
-    CameraController? _cameraController;
-    yield InitializeCameraInProgress(val: 0.3);
+    StreamController controller = Globals.imageLoadValue;
+
+    controller.sink.add(0.1);
     final cameras = await availableCameras();
-    yield InitializeCameraInProgress(val: 0.5);
+    // yield InitializeCameraInProgress();
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    controller.sink.add(0.7);
+    await Future.delayed(const Duration(milliseconds: 500));
     _camera = cameras.first;
-    _cameraController = CameraController(_camera, ResolutionPreset.high,imageFormatGroup: ImageFormatGroup.yuv420,enableAudio: true);
-    yield InitializeCameraInProgress(val: 0.7);
-    await _cameraController.initialize();
-    yield InitializeCameraInProgress(val:  1);
-    yield InitializeCameraSuccess(controller: _cameraController);
+    Globals.cameraController = CameraController(_camera!, ResolutionPreset.high,
+        imageFormatGroup: ImageFormatGroup.yuv420, enableAudio: true);
+    // yield InitializeCameraInProgress();
+    controller.sink.add(0.9);
+    await Globals.cameraController!.initialize();
+    // yield InitializeCameraInProgress();
+    controller.sink.add(1.0);
+    yield InitializeCameraSuccess();
   }
 }
