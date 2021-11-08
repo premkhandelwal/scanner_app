@@ -1,8 +1,8 @@
-class Image {
+class CapturedImage {
   String fileName;
   String imagePath;
   DateTime created;
-  Image({
+  CapturedImage({
     required this.fileName,
     required this.imagePath,
     required this.created,

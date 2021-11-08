@@ -5,13 +5,16 @@ abstract class ImageState {}
 
 class ImageInitial extends ImageState {}
 
-class InitializedCamera extends ImageState {}
 
-class InitializeInProgress extends ImageState {}
 
 class ImageCaptureInProgress extends ImageState {}
 
-class ImageCaptureSuccess extends ImageState {}
+class ImageCaptureSuccess extends ImageState {
+  final CapturedImage capturedImage;
+  ImageCaptureSuccess({
+    required this.capturedImage,
+  });
+}
 
 class ImageCaptureCancelled extends ImageState {}
 
@@ -32,4 +35,3 @@ class ImageSaveSuccess extends ImageState {}
 class ImageSaveCancelled extends ImageState {}
 
 class ImageSaveFailure extends ImageState {}
-

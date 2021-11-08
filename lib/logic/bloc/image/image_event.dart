@@ -13,6 +13,3 @@ class CropImageRequested extends ImageEvent {}
 
 class ImageSaveRequested extends ImageEvent {}
 
-class AddInitializeEvent extends ImageEvent {}
-
-class AddInitializeInProgress extends ImageEvent {}

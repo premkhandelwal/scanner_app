@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:meta/meta.dart';
+import 'package:scanner_app/constants/globals.dart';
 import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
+import 'package:scanner_app/logic/models/image.dart';
 import 'package:scanner_app/logic/providers/image_provider.dart';
 
 part 'image_event.dart';
@@ -10,39 +12,22 @@ part 'image_state.dart';
 
 class ImageBloc extends Bloc<ImageEvent, ImageState> {
   final ImagesProvider imageProvider;
-  StreamSubscription? cameraScubscription;
   CameraCubit cameraCubit;
   ImageBloc({
     required this.imageProvider,
-    this.cameraScubscription,
     required this.cameraCubit,
   }) : super(ImageInitial()) {
     on<ImageEvent>((event, emit) {
-      if (event is AddInitializeEvent) {
-        emit(InitializedCamera());
-      } else if (event is AddInitializeInProgress) {
-        emit(InitializeInProgress());
-      } else if (event is InitializeCamera) {
+      if (event is CaptureImageRequested) {
         mapCaptureImagetoState(emit);
-      } else if (state is ImageInitial) {
-        add(InitializeCamera());
       } 
     });
   }
 
   void mapCaptureImagetoState(Emitter<ImageState> emit) async {
-    cameraScubscription = cameraCubit.initCamera().listen((cameraState) {
-      if (cameraState is InitializeCameraSuccess) {
-        add(AddInitializeEvent());
-      } else if (cameraState is InitializeCameraInProgress) {
-        add(AddInitializeInProgress());
-      }
-    });
-  }
-
-  @override
-  Future<void> close() {
-    cameraScubscription!.cancel();
-    return super.close();
+    final image = await Globals.cameraController!.takePicture();
+    CapturedImage _capturedImage = CapturedImage(
+        fileName: image.name, imagePath: image.path, created: DateTime.now());
+    emit(ImageCaptureSuccess(capturedImage: _capturedImage));
   }
 }

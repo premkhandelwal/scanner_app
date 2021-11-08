@@ -2,7 +2,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scanner_app/constants/globals.dart';
-import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
+import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
+// import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 import 'package:scanner_app/screens/display_picture_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,12 +14,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late ImageBloc imageBloc;
+  late CameraCubit cameraCubit;
   @override
   void initState() {
     // getCameras();
-    imageBloc = BlocProvider.of<ImageBloc>(context);
-    imageBloc.add(CaptureImageRequested());
+    cameraCubit = BlocProvider.of<CameraCubit>(context);
+    // cameraCubit.initCamera();
+    // cameraCubit.add(CaptureImageRequested());
     super.initState();
   }
 
@@ -31,36 +33,43 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Scanner App"),
         centerTitle: true,
       ),
-      body: BlocBuilder<ImageBloc, ImageState>(
-
-        builder: (ctx, state) {
-          if (state is InitializedCamera) {
-            return CameraPreview(Globals.cameraController!);
-          } else if (state is InitializeInProgress || state is ImageInitial) {
+      body: StreamBuilder<CameraState>(
+        stream: cameraCubit.initCamera(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting) {
             return StreamBuilder<double>(
-              stream: Globals.imageLoadValue.stream,
-              builder: (context, snapshot) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: snapshot.data,
-                  ),
-                );
-              }
+                  stream: Globals.imageLoadValue.stream,
+                  builder: (context, snapshot) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: snapshot.data,
+                      ),
+                    );
+                  });
+          } else {
+            if (snapshot.data is InitializeCameraSuccess) {
+              return CameraPreview(Globals.cameraController!);
+            } else if (snapshot.data is InitializeCameraInProgress ||
+                snapshot.data is CameraInitial) {
+              return StreamBuilder<double>(
+                  stream: Globals.imageLoadValue.stream,
+                  builder: (context, snapshot) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: snapshot.data,
+                      ),
+                    );
+                  });
+            }
+            return const Text(
+              "Failed to initialize camera",
             );
           }
-          return  Container(color: Colors.blue,);
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          /* final image = await _cameraController!.takePicture();
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (ctx) => DisplayPictureScreen(
-                      imagePath: image.path,
-                    )),
-          ); */
+          // imageBloc.add(CaptureImageRequested());
         },
         child: const Icon(Icons.camera_alt),
       ),
