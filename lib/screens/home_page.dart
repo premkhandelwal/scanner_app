@@ -29,6 +29,8 @@ class _HomePageState extends State<HomePage> {
     _cameraController = CameraController(_camera, ResolutionPreset.high);
   }
 
+  double progress = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,12 +39,20 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: BlocBuilder<ImageBloc, ImageState>(
+       
         builder: (ctx, state) {
           if (state is InitializedCamera) {
             _cameraController = state.controller;
             return CameraPreview(state.controller);
+          } else if (state is InitializeInProgress) {
+            return Center(
+              child: CircularProgressIndicator(
+                value: state.value,
+
+              ),
+            );
           }
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
       floatingActionButton: FloatingActionButton(

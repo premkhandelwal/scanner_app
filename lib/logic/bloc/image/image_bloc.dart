@@ -22,9 +22,11 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       if (event is AddInitializeEvent) {
         emit(InitializedCamera(controller: event.cameraController));
       } else if (event is AddInitializeInProgress) {
-        emit(InitializeInProgress());
-      } else if (event is CaptureImageRequested) {
+        emit(InitializeInProgress(value: event.val));
+      } else if (event is InitializeCamera) {
         mapCaptureImagetoState(emit);
+      } else if (state is ImageInitial) {
+        add(InitializeCamera());
       }
     });
   }
@@ -34,7 +36,7 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       if (cameraState is InitializeCameraSuccess) {
         add(AddInitializeEvent(cameraController: cameraState.controller));
       } else if (cameraState is InitializeCameraInProgress) {
-        add(AddInitializeInProgress());
+        add(AddInitializeInProgress(val: cameraState.val));
       }
     });
   }

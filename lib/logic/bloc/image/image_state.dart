@@ -1,74 +1,45 @@
 part of 'image_bloc.dart';
 
 @immutable
-abstract class ImageState extends Equatable{}
+abstract class ImageState {}
 
-class ImageInitial extends ImageState {
-  @override
-  List<Object?> get props => [];
-}
+class ImageInitial extends ImageState {}
 
-class InitializedCamera extends ImageState{
+class InitializedCamera extends ImageState {
   final CameraController controller;
   InitializedCamera({
     required this.controller,
   });
-  @override
-  List<Object?> get props => [];
-}
-class InitializeInProgress extends ImageState{
-  @override
-  List<Object?> get props => [];
 }
 
-class ImageCaptureInProgress extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageCaptureSuccess extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageCaptureCancelled extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageCaptureFailure extends ImageState{
-  @override
-  List<Object?> get props => [];
+class InitializeInProgress extends ImageState {
+  final double value;
+  InitializeInProgress({
+    required this.value,
+  });
 }
 
-class ImageEditInProgress extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageEditSuccess extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageEditCancelled extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageEditFailure extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
+class ImageCaptureInProgress extends ImageState {}
 
-class ImageSaveInProgress extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageSaveSuccess extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageSaveCancelled extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
-class ImageSaveFailure extends ImageState{
-  @override
-  List<Object?> get props => [];
-}
+class ImageCaptureSuccess extends ImageState {}
+
+class ImageCaptureCancelled extends ImageState {}
+
+class ImageCaptureFailure extends ImageState {}
+
+class ImageEditInProgress extends ImageState {}
+
+class ImageEditSuccess extends ImageState {}
+
+class ImageEditCancelled extends ImageState {}
+
+class ImageEditFailure extends ImageState {}
+
+class ImageSaveInProgress extends ImageState {}
+
+class ImageSaveSuccess extends ImageState {}
+
+class ImageSaveCancelled extends ImageState {}
+
+class ImageSaveFailure extends ImageState {}
 

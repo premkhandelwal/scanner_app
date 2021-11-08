@@ -1,18 +1,16 @@
-
 part of 'camera_cubit.dart';
 
 @immutable
-abstract class CameraState extends Equatable{}
+abstract class CameraState {}
 
 class CameraInitial extends CameraState {
-  @override
-  List<Object?> get props => [];
 }
 
-
 class InitializeCameraInProgress extends CameraState {
-   @override
-  List<Object?> get props => [];
+  final double val;
+  InitializeCameraInProgress({
+    required this.val,
+  });
 }
 
 class InitializeCameraSuccess extends CameraState {
@@ -20,14 +18,7 @@ class InitializeCameraSuccess extends CameraState {
   InitializeCameraSuccess({
     required this.controller,
   });
-  
 
-  @override
-  List<Object?> get props => [controller];
-  }
-
-
-class InitializeCameraFailure extends CameraState {
-   @override
-  List<Object?> get props => [];
 }
+
+class InitializeCameraFailure extends CameraState {}
