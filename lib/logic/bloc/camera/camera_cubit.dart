@@ -7,11 +7,11 @@ import 'package:scanner_app/constants/globals.dart';
 
 part 'camera_state.dart';
 
-class CameraCubit extends Cubit<CameraState> {
+class CameraCubit extends Cubit<CameraState1> {
   CameraCubit() : super(CameraInitial());
 
   CameraDescription? _camera;
-  Stream<CameraState> initCamera() async* {
+  Stream<CameraState1> initCamera() async* {
     StreamController controller = Globals.imageLoadValue;
 
     controller.sink.add(0.1);

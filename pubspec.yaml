@@ -28,12 +28,13 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   camera: ^0.9.4+3
+  camerawesome: ^0.3.0+1
   crop_your_image: ^0.6.0+1
   cupertino_icons: ^1.0.2
   equatable: ^2.0.3
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.3.2
+  flutter_bloc: ^7.3.3
   image_cropper: ^1.4.1
   path: ^1.8.0
   path_provider: ^2.0.6
