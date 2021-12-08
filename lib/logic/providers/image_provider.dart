@@ -12,11 +12,9 @@ class ImagesProvider extends BaseImageProvider {
       await Globals.cameraController!.takePicture().then((value) {
         return value;
       }).onError((error, stackTrace) {
-        print(error);
         throw Exception();
       });
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }

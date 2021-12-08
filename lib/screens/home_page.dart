@@ -1,15 +1,9 @@
-import 'dart:io';
-
-import 'package:camera/camera.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/models/orientations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:scanner_app/constants/globals.dart';
 import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
-import 'package:scanner_app/screens/preview_card.dart';
+import 'package:scanner_app/widgets/bottom_bar.dart';
 // import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +13,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+  String? _lastPhotoPath;
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late CameraCubit cameraCubit;
   @override
@@ -29,66 +24,41 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   double progress = 0.1;
 
-    String? _lastPhotoPath;
   @override
   Widget build(BuildContext context) {
     ValueNotifier<CameraFlashes> _switchFlash =
         ValueNotifier(CameraFlashes.NONE);
     ValueNotifier<Sensors> _sensor = ValueNotifier(Sensors.BACK);
-    ValueNotifier<Size> _photoSize = ValueNotifier(Size(1080, 2340));
+    ValueNotifier<Size> _photoSize = ValueNotifier(const Size(1080, 2340));
     ValueNotifier<double> _zoom = ValueNotifier(0.0);
     ValueNotifier<CaptureModes> _captureModes =
         ValueNotifier(CaptureModes.PHOTO);
-    ValueNotifier<CameraOrientations> _orientation =
-        ValueNotifier(CameraOrientations.PORTRAIT_UP);
+    
 
     // Controller
-    PictureController _pictureController = PictureController();
     return Scaffold(
+      bottomNavigationBar: BottomBarWidget(),
       body: SafeArea(
-        child: Stack(fit: StackFit.expand, children: [
-          
-          Positioned(
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      child: Center(
-        child: CameraAwesome(
-          testMode: false,
-          onPermissionsResult: (bool? result) {},
-          selectDefaultSize: (List<Size> availableSizes) =>
-              availableSizes.first,
-          onCameraStarted: () async {},
-          onOrientationChanged: (CameraOrientations? newOrientation) {},
-          zoom: _zoom,
-          sensor: _sensor,
-          photoSize: _photoSize,
-          switchFlashMode: _switchFlash,
-          captureMode: _captureModes,
-          orientation: DeviceOrientation.portraitUp,
-        ),
-      ),
-    ),
-         PreviewCardWidget(
-            lastPhotoPath: _lastPhotoPath,
-            orientation: _orientation,
-          ),
-          IconButton(
-            highlightColor: Colors.orange,
-            
-            alignment: Alignment.bottomCenter,
-              onPressed: () async {
-                final Directory extDir = await getTemporaryDirectory();
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: CameraAwesome(
 
-                final String filePath =
-                    '${extDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-                await _pictureController.takePicture(filePath);
-                _lastPhotoPath = filePath;
-                setState(() {});
-              },
-              icon: const Icon(Icons.camera_alt)),
-        ]),
+            testMode: true,
+            onPermissionsResult: (bool? result) {},
+            selectDefaultSize: (List<Size> availableSizes) =>
+                availableSizes.first,
+            onCameraStarted: () async {},
+            onOrientationChanged: (CameraOrientations? newOrientation) {},
+            zoom: _zoom,
+            sensor: _sensor,
+            photoSize: _photoSize,
+            switchFlashMode: _switchFlash,
+            captureMode: _captureModes,
+            orientation: DeviceOrientation.portraitUp,
+            // fitted: true,
+          ),
+        ),
       ),
 
       /* BlocBuilder<CameraCubit, CameraState1>(
@@ -116,37 +86,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         
       ),
  */
-
     );
   }
 
-  Positioned newMethod(
-      ValueNotifier<double> _zoom,
-      ValueNotifier<Sensors> _sensor,
-      ValueNotifier<Size> _photoSize,
-      ValueNotifier<CameraFlashes> _switchFlash,
-      ValueNotifier<CaptureModes> _captureModes) {
-    return Positioned(
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      child: Center(
-        child: CameraAwesome(
-          testMode: false,
-          onPermissionsResult: (bool? result) {},
-          selectDefaultSize: (List<Size> availableSizes) =>
-              availableSizes.first,
-          onCameraStarted: () async {},
-          onOrientationChanged: (CameraOrientations? newOrientation) {},
-          zoom: _zoom,
-          sensor: _sensor,
-          photoSize: _photoSize,
-          switchFlashMode: _switchFlash,
-          captureMode: _captureModes,
-          orientation: DeviceOrientation.portraitUp,
-        ),
-      ),
-    );
   }
-}

@@ -23,7 +23,6 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
         emit(ImageCaptureSuccess(capturedImage: _capturedImage));
         return;
       }
-      print("Hello");
     });
   }
 
