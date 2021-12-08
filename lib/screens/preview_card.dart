@@ -25,7 +25,6 @@ class PreviewCardWidget extends StatelessWidget {
           
         )
         : Container(
-          // height: 100,
           width: OrientationUtils.isOnPortraitMode(orientation.value)
                   ? 84
                   : 256,

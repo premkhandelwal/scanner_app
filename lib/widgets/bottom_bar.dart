@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/models/orientations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 import 'package:scanner_app/screens/preview_card.dart';
 
 String? lastPhotoPath;
@@ -20,20 +22,24 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
 
   final ValueNotifier<CameraOrientations> _orientation =
       ValueNotifier(CameraOrientations.PORTRAIT_UP);
+  late ImageBloc imageBloc;
+  @override
+  void initState() {
+    imageBloc = BlocProvider.of<ImageBloc>(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             decoration: BoxDecoration(
-            color: Colors.grey,
-              borderRadius: BorderRadius.circular(30)
-            ),
+                color: Colors.grey, borderRadius: BorderRadius.circular(30)),
             child: IconButton(
               onPressed: () {},
               icon: const Icon(Icons.photo),
@@ -46,12 +52,9 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
                 highlightColor: Colors.orange,
                 splashColor: Colors.blue,
                 onPressed: () async {
-                  final Directory extDir = await getTemporaryDirectory();
-
-                  final String filePath =
-                      '${extDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-                  await _pictureController.takePicture(filePath);
-                  lastPhotoPath = filePath;
+                  imageBloc.add(CaptureImageRequested(
+                      pictureController: _pictureController));
+                  
                   setState(() {});
                 },
                 icon: const Icon(Icons.camera_alt)),

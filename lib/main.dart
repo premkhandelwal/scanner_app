@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
+import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 import 'package:scanner_app/logic/providers/image_provider.dart';
 import 'package:scanner_app/screens/home_page.dart';
 
@@ -27,7 +29,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: MultiBlocProvider(
+        providers: [
+           BlocProvider(
+            create: (context) => ImageBloc(cameraCubit: cameraCubit,imageProvider: imageProvider),
+          ),
+        ],
+            child: HomePage(),
+      ),
     );
   }
 }

@@ -1,19 +1,24 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
+import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:scanner_app/constants/globals.dart';
 
 abstract class BaseImageProvider {
-  Future<XFile?> captureImage();
+  Future<String?> captureImage(PictureController pictureController);
 }
 
 class ImagesProvider extends BaseImageProvider {
   @override
-  Future<XFile?> captureImage() async {
+  Future<String?> captureImage(PictureController pictureController) async {
     try {
-      await Globals.cameraController!.takePicture().then((value) {
-        return value;
-      }).onError((error, stackTrace) {
-        throw Exception();
-      });
+      final Directory extDir = await getTemporaryDirectory();
+
+      final String filePath =
+          '${extDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await pictureController.takePicture(filePath);
+      return filePath;
     } catch (e) {
       throw Exception(e);
     }

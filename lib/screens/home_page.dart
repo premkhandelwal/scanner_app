@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
 import 'package:scanner_app/widgets/bottom_bar.dart';
+import 'package:scanner_app/widgets/camera_awesome_widget.dart';
 // import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,7 +14,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-  String? _lastPhotoPath;
+String? _lastPhotoPath;
+
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late CameraCubit cameraCubit;
   @override
@@ -28,65 +30,62 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     ValueNotifier<CameraFlashes> _switchFlash =
         ValueNotifier(CameraFlashes.NONE);
-    ValueNotifier<Sensors> _sensor = ValueNotifier(Sensors.BACK);
+    ValueNotifier<Sensors> _sensor = ValueNotifier(Sensors.FRONT);
     ValueNotifier<Size> _photoSize = ValueNotifier(const Size(1080, 2340));
     ValueNotifier<double> _zoom = ValueNotifier(0.0);
     ValueNotifier<CaptureModes> _captureModes =
         ValueNotifier(CaptureModes.PHOTO);
-    
 
     // Controller
-    return Scaffold(
-      bottomNavigationBar: BottomBarWidget(),
-      body: SafeArea(
-        child: SizedBox(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+
+        ),
+        drawer: IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.ac_unit),
+        ),
+        bottomNavigationBar: const BottomBarWidget(),
+    
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: CameraAwesome(
-
-            testMode: true,
-            onPermissionsResult: (bool? result) {},
-            selectDefaultSize: (List<Size> availableSizes) =>
-                availableSizes.first,
-            onCameraStarted: () async {},
-            onOrientationChanged: (CameraOrientations? newOrientation) {},
-            zoom: _zoom,
-            sensor: _sensor,
-            photoSize: _photoSize,
-            switchFlashMode: _switchFlash,
-            captureMode: _captureModes,
-            orientation: DeviceOrientation.portraitUp,
-            // fitted: true,
-          ),
+          child: CameraAwesomeWidget(
+              zoom: _zoom,
+              sensor: _sensor,
+              photoSize: _photoSize,
+              switchFlash: _switchFlash,
+              captureModes: _captureModes),
         ),
-      ),
-
-      /* BlocBuilder<CameraCubit, CameraState1>(
-        // stream: cameraCubit.initCamera(),
-        builder: (ctx, state) {
-          
-            if (state is InitializeCameraSuccess) {
-              return CameraPreview(Globals.cameraController!);
-            } else if (state is InitializeCameraInProgress ||
-                state is CameraInitial) {
-              return StreamBuilder<double>(
-                  stream: Globals.imageLoadValue.stream,
-                  builder: (context, snapshot) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: snapshot.data,
-                      ),
-                    );
-                  });
+    
+        /* BlocBuilder<CameraCubit, CameraState1>(
+          // stream: cameraCubit.initCamera(),
+          builder: (ctx, state) {
+            
+              if (state is InitializeCameraSuccess) {
+                return CameraPreview(Globals.cameraController!);
+              } else if (state is InitializeCameraInProgress ||
+                  state is CameraInitial) {
+                return StreamBuilder<double>(
+                    stream: Globals.imageLoadValue.stream,
+                    builder: (context, snapshot) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: snapshot.data,
+                        ),
+                      );
+                    });
+              }
+              return const Text(
+                "Failed to initialize camera",
+              );
             }
-            return const Text(
-              "Failed to initialize camera",
-            );
-          }
-        
+          
+        ),
+     */
       ),
- */
     );
   }
-
-  }
+}

@@ -5,7 +5,12 @@ abstract class ImageEvent {}
 
 class InitializeCamera extends ImageEvent {}
 
-class CaptureImageRequested extends ImageEvent {}
+class CaptureImageRequested extends ImageEvent {
+  final PictureController pictureController;
+  CaptureImageRequested({
+    required this.pictureController,
+  });
+}
 
 class EditImageRequested extends ImageEvent {}
 
