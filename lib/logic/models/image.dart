@@ -1,14 +1,16 @@
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
+
 class CapturedImage {
-  String fileName;
-  String imagePath;
-  DateTime created;
-  Uint8List imageAsBytes;
+  String? fileName;
+  Image? capturedImage;
+  DateTime? created;
+  Uint8List? imageAsBytes;
   CapturedImage({
-    required this.fileName,
-    required this.imagePath,
-    required this.created,
-    required this.imageAsBytes,
+    this.fileName,
+    this.capturedImage,
+   this.created,
+   this.imageAsBytes,
   });
 }

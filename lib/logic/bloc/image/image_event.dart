@@ -12,9 +12,11 @@ class CaptureImageRequested extends ImageEvent {
   });
 }
 
+
 class EditImageRequested extends ImageEvent {}
 
 class CropImageRequested extends ImageEvent {}
 
 class ImageSaveRequested extends ImageEvent {}
 
+class FetchCapturedImages extends ImageEvent{}

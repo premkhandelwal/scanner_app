@@ -24,18 +24,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MultiBlocProvider(
-        providers: [
-           BlocProvider(
-            create: (context) => ImageBloc(cameraCubit: cameraCubit,imageProvider: imageProvider),
-          ),
-        ],
-            child: HomePage(),
+    return MultiBlocProvider(
+      providers: [
+         BlocProvider(
+          create: (context) => ImageBloc(cameraCubit: cameraCubit,imageProvider: imageProvider),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomePage(),
       ),
     );
   }

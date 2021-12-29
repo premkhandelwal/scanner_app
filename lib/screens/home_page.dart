@@ -1,8 +1,7 @@
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:camerawesome/models/orientations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:scanner_app/logic/bloc/camera/camera_cubit.dart';
+import 'package:scanner_app/screens/captured_image_screen.dart';
 import 'package:scanner_app/widgets/bottom_bar.dart';
 import 'package:scanner_app/widgets/camera_awesome_widget.dart';
 // import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
@@ -13,8 +12,6 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
-
-String? _lastPhotoPath;
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late CameraCubit cameraCubit;
@@ -41,14 +38,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
-
-        ),
-        drawer: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.ac_unit),
+          leading: IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => const CapturedImagesScreen()
+                ),
+              );
+            },
+          ),
         ),
         bottomNavigationBar: const BottomBarWidget(),
-    
         body: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               switchFlash: _switchFlash,
               captureModes: _captureModes),
         ),
-    
+
         /* BlocBuilder<CameraCubit, CameraState1>(
           // stream: cameraCubit.initCamera(),
           builder: (ctx, state) {

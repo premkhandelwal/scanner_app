@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scanner_app/screens/orientation_utils.dart';
 
 class PreviewCardWidget extends StatelessWidget {
-  final String? lastPhotoPath;
+  final Image? lastPhotoPath;
   final ValueNotifier<CameraOrientations> orientation;
 
   const PreviewCardWidget({
@@ -20,10 +20,7 @@ class PreviewCardWidget extends StatelessWidget {
 
   Widget _buildPreviewPicture() {
     return lastPhotoPath != null
-        ? Image.file(
-          File(lastPhotoPath!),
-          
-        )
+        ? Image(image: lastPhotoPath!.image,)
         : Container(
           width: OrientationUtils.isOnPortraitMode(orientation.value)
                   ? 84

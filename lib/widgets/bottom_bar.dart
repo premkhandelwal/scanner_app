@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/models/orientations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:scanner_app/logic/bloc/image/image_bloc.dart';
 import 'package:scanner_app/screens/preview_card.dart';
 
@@ -54,14 +51,26 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
                 onPressed: () async {
                   imageBloc.add(CaptureImageRequested(
                       pictureController: _pictureController));
-                  
-                  setState(() {});
                 },
                 icon: const Icon(Icons.camera_alt)),
           ),
-          PreviewCardWidget(
-            lastPhotoPath: lastPhotoPath,
-            orientation: _orientation,
+          BlocBuilder<ImageBloc, ImageState>(
+            buildWhen: (previous, current) {
+              if (current is ImageCaptureSuccess) {
+                return true;
+              }
+              return false;
+            },
+            builder: (context, state) {
+              if (state is ImageCaptureSuccess) {
+                return PreviewCardWidget(
+                  lastPhotoPath: state.capturedImage.capturedImage,
+                  orientation: _orientation,
+                );
+              }
+              return PreviewCardWidget(
+                  lastPhotoPath: null, orientation: _orientation);
+            },
           ),
         ],
       ),
